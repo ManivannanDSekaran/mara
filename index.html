@@ -1,0 +1,77 @@
+<html>
+<title>Option Calculator</title>
+<form>
+<H2>Calculator <input style='text-align:right' size=3 id="contractSize" value="100" onblur="computeAverageOut()"></H2>
+<table>
+  <tr>
+     <td>Current Cost & Qty</td>
+     <td><input size=7 style='text-align:right' id=currentCost onblur="computeAverageOut()"> <input style='text-align:right' size=5 type=text id=currentQty onblur="computeAverageOut()"> </td>
+     <td><input size=7 style='text-align:right' type=text id=positionCostNet readonly></td>
+  </tr>
+  <tr>
+     <td>New Cost & Qty</td>
+     <td><input size=7 style='text-align:right' type=text id=newCost onblur="computeAverageOut()"> <input style='text-align:right' size=5 type=text id=newQty onblur="computeAverageOut()"> </td>
+     <td><input size=7 style='text-align:right' type=text id=averageCostNet readonly></td>
+  </tr>
+  <tr>
+     <td>Total</td>
+     <td>
+        <input style='text-align:right' type=text id=finalCost readonly>
+     </td>
+     <td><input style='text-align:right' size=7 type=text id=totalCostNet></td>
+  </tr>
+  <tr>
+     <td>Target</td>
+     <td>
+        <input style='text-align:right' type=text id=target onblur="computeAverageOut()">
+     </td>
+     <td><input style='text-align:right' size=7 type=text id=targetPL onblur="computeTarget()"></td>
+  </tr>
+  <tr>
+     <td colspan=3>
+	<input type=button value="Calculate" onclick="computeAverageOut()">
+     </td>
+  </tr>
+</table>
+</form>
+<script>
+function computeAverageOut() {
+   var contractSize =  document.getElementById("contractSize").value * 1;
+   var currentCost = document.getElementById("currentCost").value * 1;
+   var currentQty = document.getElementById("currentQty").value * 1;
+   document.getElementById("positionCostNet").value = currentQty * currentCost * contractSize;
+
+   var newCost = document.getElementById("newCost").value * 1;
+   var newQty = document.getElementById("newQty").value * 1;
+   document.getElementById("averageCostNet").value = newCost * newQty * contractSize;
+ 
+
+
+   document.getElementById("finalCost").value = (currentCost * currentQty + newCost * newQty)/(currentQty+ newQty);
+   document.getElementById("totalCostNet").value = newCost * newQty * contractSize  + currentQty * currentCost * contractSize;
+
+   var target = document.getElementById("target").value * 1;
+   if (target != 0) {
+       var targetPL =  contractSize  * target * (currentQty+ newQty) - (newCost * newQty * contractSize  + currentQty * currentCost * contractSize);
+       document.getElementById("targetPL").value = targetPL;
+   }
+   
+}
+
+function computeTarget() {
+   var targetPL = document.getElementById("targetPL").value * 1;
+   var finalCost = document.getElementById("finalCost").value * 1;
+   var currentQty = document.getElementById("currentQty").value * 1;
+   var newQty = document.getElementById("newQty").value * 1;
+   var contractSize =  document.getElementById("contractSize").value * 1;
+   var totalCostNet  = document.getElementById("totalCostNet").value * 1;
+
+
+   if (targetPL != 0) {
+       var delta = (totalCostNet + targetPL)/((currentQty + newQty) * contractSize);
+       document.getElementById("target").value = delta;
+   }
+}
+
+</script>
+<html>
